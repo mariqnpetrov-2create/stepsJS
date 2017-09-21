@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Title</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<style type="text/css" media="screen">
+		* { padding: 0; margin: 0; }
+
+		button { width: 140px; height: 50px; font-size: 20px; }
+
+		progress { display: block; width: 300px; margin: 50px auto; }
+
+		h1 { margin-bottom: 20px; }
+
+		.wrapper { padding: 30px; font-size: 40px; }
+
+		.form { width: 500px; margin: 0 auto; text-align: center; }
+
+		.form-step { display: none; }
+		.form-step.active { display: block; }
+
+		.list-paging { width: 300px; margin: 30px auto; text-align: center; }
+		.list-paging li { display: inline-block; vertical-align: top; margin: 0 10px; }
+		.list-paging span { display: block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid green; }
+		.list-paging .active span { background: blue; }
+	</style>
+
+	<script src="steps.js"></script>
+</head>
+<body>
+<div class="wrapper">
+	<div class="form">
+		<form action="#" method="post" id="form">
+			<div class="form-step active" data-step-index="0">
+				<h1>This is Step 1</h1>
+
+				<button data-move-to="next">To Next Step</button>
+
+				<button data-move-to="2">To Step 3</button>
+
+				<button data-move-to="3">To Step 4</button>
+			</div><!-- /.form-step -->
+
+			<div class="form-step" data-step-index="1">
+				<h1>This is Step 2</h1>
+
+				<button data-move-to="prev">To Prev Step</button>
+
+				<button data-move-to="next">To Next Step</button>
+
+				<button data-move-to="3">To Step 4</button>
+			</div><!-- /.form-step -->
+
+			<div class="form-step" data-step-index="2">
+				<h1>This is Step 3</h1>
+
+				<button data-move-to="0">To Step 1</button>
+
+				<button data-move-to="prev">To Prev Step</button>
+
+				<button data-move-to="next">To Next Step</button>
+			</div><!-- /.form-step -->
+
+			<div class="form-step" data-step-index="3">
+				<h1>This is Step 4</h1>
+
+				<button data-move-to="0">To Step 1</button>
+
+				<input type="submit" value="Submit">
+			</div><!-- /.form-step -->
+		</form>
+	</div><!-- /.form -->
+
+	<progress max="100" value="0"></progress>
+
+	<ul class="list-paging">
+		<li class="active">
+			<span></span>
+		</li>
+
+		<li>
+			<span></span>
+		</li>
+
+		<li>
+			<span></span>
+		</li>
+
+		<li>
+			<span></span>
+		</li>
+	</ul><!-- /.list-paging -->
+</div><!-- /.wrapper -->
+
+<script type="text/javascript">
+	var buttons = document.querySelectorAll('button');
+	var progressbar = document.querySelector('progress');
+	var pagingDots = document.querySelectorAll('.list-paging li');
+
+	var steps = new Steps({
+		steps: '[data-step-index]',
+		container: document.getElementById('form')
+	});
+
+	buttons.forEach(function(button) {
+		button.addEventListener('click', function(event) {
+			event.preventDefault();
+
+			var moveToStep = this.getAttribute('data-move-to');
+
+			// Add your validation logic here
+			// If (myFormIsValid) {
+			toggleSteps(moveToStep);
+
+			updateProgress();
+
+			updatePaging();
+			//}
+		});
+	});
+
+	function toggleSteps(moveTo) {
+		if ( moveTo == 'next' ) {
+			steps.next();
+		} else if ( moveTo == 'prev' ) {
+			steps.prev();
+		} else {
+			steps.to(moveTo); // moveTo should be the index of existing step
+		}
+	}
+
+	function updateProgress() {
+		progressbar.value = steps.progress();
+	}
+
+	function updatePaging() {
+		pagingDots.forEach(function(dot, dotIndex) {
+			if ( dotIndex == steps.activeStepIndex ) {
+				dot.classList.add('active');
+			} else {
+				dot.classList.remove('active');
+			}
+		});
+	}
+</script>
+</body>
+</html>
