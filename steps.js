@@ -11,9 +11,9 @@ var Steps = (function() {
 
 		extend(this.settings, config);
 
-		this.steps = this.settings.container.querySelectorAll(this.settings.steps);
+		this.collection = this.settings.container.querySelectorAll(this.settings.steps);
 
-		this.activeStepIndex = this.settings.activeStep;
+		this.activeIndex = this.settings.activeStep;
 
 		if ( this.settings.customOrder ) {
 			// Rearrange the elements based on their INDEX value
@@ -24,39 +24,39 @@ var Steps = (function() {
 	Steps.prototype.reArrange = function() {
 		var tempSteps = [];
 
-		this.steps.forEach(function(el) {
+		this.collection.forEach(function(el) {
 			var index = el.getAttribute('data-step-index');
 
 			tempSteps.splice(index, 0, el);
 		});
 
-		this.steps = tempSteps;
+		this.collection = tempSteps;
 	};
 
 	Steps.prototype.next = function() {
-		this.toggle(this.activeStepIndex, this.activeStepIndex + 1);
+		this.toggle(this.activeIndex, this.activeIndex + 1);
 	};
 
 	Steps.prototype.prev = function() {
-		this.toggle(this.activeStepIndex, this.activeStepIndex - 1);
+		this.toggle(this.activeIndex, this.activeIndex - 1);
 	};
 
 	Steps.prototype.to = function(index) {
-		this.toggle(this.activeStepIndex, parseInt(index));
+		this.toggle(this.activeIndex, parseInt(index));
 	};
 
 	Steps.prototype.toggle = function(oldStepIndex, newStepIndex) {
-		if ( this.steps[newStepIndex] != undefined ) {
-			this.steps[oldStepIndex].classList.remove(this.settings.activeClass);
+		if ( this.collection[newStepIndex] != undefined ) {
+			this.collection[oldStepIndex].classList.remove(this.settings.activeClass);
 
-			this.steps[newStepIndex].classList.add(this.settings.activeClass);
+			this.collection[newStepIndex].classList.add(this.settings.activeClass);
 
-			this.activeStepIndex = newStepIndex;
+			this.activeIndex = newStepIndex;
 		}
 	};
 
 	Steps.prototype.progress = function() {
-		return ( this.activeStepIndex / ( this.steps.length - 1 ) ) * 100;
+		return ( this.activeIndex / ( this.collection.length - 1 ) ) * 100;
 	};
 
 	function extend(defaultObj, newObj) {
