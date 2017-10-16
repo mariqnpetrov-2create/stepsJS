@@ -4,7 +4,7 @@ var Steps = (function() {
 		this.settings = {
 			steps: '[data-step]',
 			activeClass: 'active',
-			customOrder: false,
+			customOrder: true,
 			activeStep: 0,
 			container: document
 		}
@@ -24,11 +24,13 @@ var Steps = (function() {
 	Steps.prototype.reArrange = function() {
 		var tempSteps = [];
 
-		this.collection.forEach(function(el) {
+		for (var i = 0; i < this.collection.length; i++) {
+			var el = this.collection[i];
+
 			var index = el.getAttribute('data-step-index');
 
 			tempSteps.splice(index, 0, el);
-		});
+		};
 
 		this.collection = tempSteps;
 	};
